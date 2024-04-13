@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-
-import { Input } from "@/components/ui/input";
-
 import "./App.css";
-import ItemInfo from "./interfaces/ItemInfo";
 import Item from "./components/ui/item";
-
+import ItemInfo from "./interfaces/ItemInfo";
 import {
   Pagination,
   PaginationContent,
@@ -14,15 +10,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
 import allItems from "./assets/psx_games.json";
-import logoImg from "./assets/psx_store.png";
+import Navbar from "./components/ui/navbar";
 
 export default function App() {
-  const [queryName, setQueryName] = useState("");
-  // temporary so sonarlint stop crying
-  queryName;
-
   const [items, setItems] = useState<ItemInfo[]>([]);
   const [page, setPage] = useState(0);
   const maxPaginationItems = 10;
@@ -40,18 +31,7 @@ export default function App() {
 
   return (
     <>
-      <header className="bg-slate-800 h-16 px-8 flex justify-between items-center">
-        <img src={logoImg} srcSet="" alt="psx store" className="h-full" />
-        <Input
-          placeholder="Search"
-          onChange={(e) => setQueryName(e.target.value)}
-          className="max-w-screen-sm"
-        />
-        <button className="rounded-full aspect-square w-10 bg-slate-600 hover:bg-slate-500 active:bg-slate-400">
-          <i className="fa fa-shopping-cart text-slate-200 text-2xl"></i>
-        </button>
-      </header>
-
+      <Navbar />
       <main className="bg-slate-200 w-full min-h-screen">
         <div className="grid grid-cols-3 gap-2 max-w-screen-md mx-auto py-2">
           {items.map((item, i) => (
