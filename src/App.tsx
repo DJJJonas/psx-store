@@ -19,19 +19,29 @@ export default function App() {
   const maxPaginationItems = 10;
   const itemsPageLimit = 9;
   const itemsBookLimit = Math.ceil(allItems.length / itemsPageLimit);
+  const [queryName, setQueryName] = useState("");
 
   useEffect(() => {
+    const queryedItems = allItems.filter(({ name }) => {
+      return name.toLowerCase().includes(queryName.toLowerCase());
+    });
     const temp: ItemInfo[] = [];
-    for (let i = itemsPageLimit * page; i < itemsPageLimit * (page + 1); i++) {
-      temp.push(allItems[i]);
+    for (let i = 0; i < itemsPageLimit; i++) {
+      if (!queryedItems[i]) break;
+      temp.push(queryedItems[i]);
     }
     setItems(temp);
+    // Clean Up
     return () => setItems([]);
-  }, [page]);
+  }, [page, queryName]);
 
   return (
     <>
-      <Navbar />
+      <Navbar
+        OnInput={({ target }) => {
+          setQueryName(target.value);
+        }}
+      />
       <main className="bg-slate-200 w-full min-h-screen">
         <div className="grid grid-cols-3 gap-2 max-w-screen-md mx-auto py-2">
           {items.map((item, i) => (
