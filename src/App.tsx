@@ -15,7 +15,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import allItems from "../public/psx_games.json";
+import allItems from "./assets/psx_games.json";
+import logoImg from "./assets/psx_store.png";
 
 export default function App() {
   const [queryName, setQueryName] = useState("");
@@ -35,72 +36,71 @@ export default function App() {
     }
     setItems(temp);
     return () => setItems([]);
-  }, [items, page]);
+  }, [page]);
 
   return (
     <>
-      <header className="bg-slate-200 h-16 px-8 flex justify-between items-center">
-        <img
-          src="/psx_store.png"
-          srcSet=""
-          alt="psx store"
-          className="h-full"
-        />
+      <header className="bg-slate-800 h-16 px-8 flex justify-between items-center">
+        <img src={logoImg} srcSet="" alt="psx store" className="h-full" />
         <Input
           placeholder="Search"
           onChange={(e) => setQueryName(e.target.value)}
           className="max-w-screen-sm"
         />
-        <i className="fa fa-shopping-cart"></i>
+        <button className="rounded-full aspect-square w-10 bg-slate-600 hover:bg-slate-500 active:bg-slate-400">
+          <i className="fa fa-shopping-cart text-slate-200 text-2xl"></i>
+        </button>
       </header>
-      <main className="bg-slate-400 w-full">
-        <Pagination className="py-2 bg-slate-200">
-          <PaginationContent>
-            <PaginationItem className="cursor-pointer">
-              <PaginationPrevious
-                onClick={() => {
-                  if (page > 0) {
-                    setPage(page - 1);
-                  }
-                }}
-              />
-            </PaginationItem>
-            {Array.from(Array(maxPaginationItems), (_, i) => (
-              <PaginationItem
-                key={i}
-                className="cursor-pointer"
-                onClick={() => setPage(i)}
-              >
-                <PaginationLink
-                  isActive={
-                    i === page ||
-                    (i === maxPaginationItems - 1 && page >= maxPaginationItems)
-                  }
-                >
-                  {i === maxPaginationItems - 1 && page >= maxPaginationItems
-                    ? page + 1
-                    : i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem className="cursor-pointer">
-              <PaginationNext
-                onClick={() => {
-                  if (page < itemsBookLimit) {
-                    setPage(page + 1);
-                  }
-                }}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
 
+      <main className="bg-slate-200 w-full min-h-screen">
         <div className="grid grid-cols-3 gap-2 max-w-screen-md mx-auto py-2">
-          {items.map((item) => (
-            <Item key={item.serial} item={item} />
+          {items.map((item, i) => (
+            <Item key={item.serial + i} item={item} />
           ))}
         </div>
       </main>
+
+      <Pagination className="py-2 bg-slate-200">
+        <PaginationContent>
+          <PaginationItem className="cursor-pointer">
+            <PaginationPrevious
+              onClick={() => {
+                if (page > 0) {
+                  setPage(page - 1);
+                }
+              }}
+            />
+          </PaginationItem>
+          {Array.from(Array(maxPaginationItems), (_, i) => (
+            <PaginationItem
+              key={i}
+              className="cursor-pointer"
+              onClick={() => setPage(i)}
+            >
+              <PaginationLink
+                isActive={
+                  i === page ||
+                  (i === maxPaginationItems - 1 && page >= maxPaginationItems)
+                }
+              >
+                {i === maxPaginationItems - 1 && page >= maxPaginationItems
+                  ? page + 1
+                  : i + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem className="cursor-pointer">
+            <PaginationNext
+              onClick={() => {
+                if (page < itemsBookLimit) {
+                  setPage(page + 1);
+                }
+              }}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+
       <footer></footer>
     </>
   );
