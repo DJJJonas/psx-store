@@ -26,9 +26,11 @@ export default function App() {
       return name.toLowerCase().includes(queryName.toLowerCase());
     });
     const temp: ItemInfo[] = [];
-    for (let i = 0; i < itemsPageLimit; i++) {
-      if (!queryedItems[i]) break;
-      temp.push(queryedItems[i]);
+    for (let i = page * itemsPageLimit; i < itemsPageLimit * (page + 1); i++) {
+      const item = queryedItems[i];
+
+      if (!item) break;
+      temp.push(item);
     }
     setItems(temp);
     // Clean Up
@@ -39,11 +41,13 @@ export default function App() {
     <>
       <Navbar
         OnInput={({ target }) => {
+          setPage(0);
           setQueryName(target.value);
         }}
       />
+
       <main className="bg-slate-200 w-full min-h-screen">
-        <div className="grid grid-cols-3 gap-2 max-w-screen-md mx-auto py-2">
+        <div className="grid md:grid-cols-3 grid-cols-2 gap-2 max-w-screen-md md:mx-auto mx-2 py-2">
           {items.map((item, i) => (
             <Item key={item.serial + i} item={item} />
           ))}
