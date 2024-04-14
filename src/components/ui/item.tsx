@@ -19,7 +19,18 @@ function calculatePriceAndDiscount(serial: string) {
   return [price, discount];
 }
 
-export default function Item({ item }: Readonly<{ item: ItemInfo }>) {
+type ItemProps = {
+  readonly item: ItemInfo;
+  readonly onFavorite: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  readonly onCartAdd: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  readonly className?: string;
+};
+export default function Item({
+  item,
+  onCartAdd,
+  onFavorite,
+  className,
+}: ItemProps) {
   const imgURL = `https://raw.githubusercontent.com/xlenore/psx-covers/main/covers/3d/${item.serial}.png`;
   const defaultRating = 10;
 
@@ -32,13 +43,27 @@ export default function Item({ item }: Readonly<{ item: ItemInfo }>) {
   const [price, discount] = calculatePriceAndDiscount(item.serial);
 
   return (
-    <Card className="flex flex-col item-center justify-between h-fit cursor-pointer group">
+    <Card
+      className={
+        "flex flex-col item-center justify-between h-fit group " +
+        (className ?? "")
+      }
+    >
       <CardHeader className="relative">
         <img src={imgURL} alt={item.name} />
-        <div className="absolute top-0 right-2">
-          <i className="fa fa-heart text-gray-400 transition cursor-pointer hover:scale-110"></i>
-          <br />
-          <i className="fa fa-shopping-cart text-gray-400 transition cursor-pointer hover:scale-110"></i>
+        <div className="[ absolute top-0 right-2 ] [ flex flex-col ] [ md:text-base text-2xl ]">
+          <button
+            onClick={onFavorite}
+            className=" text-gray-400 transition cursor-pointer hover:scale-110"
+          >
+            <i className="fa fa-heart"></i>
+          </button>
+          <button
+            onClick={onCartAdd}
+            className="text-gray-400 transition cursor-pointer hover:scale-110"
+          >
+            <i className="fa fa-shopping-cart"></i>
+          </button>
         </div>
       </CardHeader>
       <CardContent className="py-0">
@@ -48,10 +73,13 @@ export default function Item({ item }: Readonly<{ item: ItemInfo }>) {
       </CardContent>
       <CardFooter className="flex flex-col items-center justify-center">
         <p className="text-stale-500">{fullStars}</p>
-        <p className="self-end text-green-600 text-2xl font-semibold">
+        {/* Price info */}
+        <div className="flex flex-col md:flex-row justify-end items-end w-full">
           <span className="text-sm text-slate-400 line-through">R${price}</span>
-          R${(price * discount).toFixed(2)}
-        </p>
+          <p className="self-end text-green-600 text-2xl font-semibold">
+            R${(price * discount).toFixed(2)}
+          </p>
+        </div>
       </CardFooter>
     </Card>
   );
