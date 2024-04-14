@@ -16,7 +16,7 @@ import Navbar from "./components/ui/navbar";
 export default function App() {
   const [items, setItems] = useState<ItemInfo[]>([]);
   const [page, setPage] = useState(0);
-  const maxPaginationItems = 10;
+  const maxPaginationItems = 5;
   const itemsPageLimit = 9;
   const itemsBookLimit = Math.ceil(allItems.length / itemsPageLimit);
   const [queryName, setQueryName] = useState("");
@@ -49,12 +49,18 @@ export default function App() {
       <main className="bg-slate-200 w-full min-h-screen">
         <div className="grid md:grid-cols-3 grid-cols-2 gap-2 max-w-screen-md md:mx-auto mx-2 py-2">
           {items.map((item, i) => (
-            <Item key={item.serial + i} item={item} />
+            <Item
+              key={item.serial + i}
+              item={item}
+              onCartAdd={console.log}
+              onFavorite={console.log}
+              className={i + 1 === itemsPageLimit ? "max-[768px]:hidden" : ""}
+            />
           ))}
         </div>
       </main>
 
-      <Pagination className="py-2 bg-slate-200">
+      <Pagination className="py-2 bg-slate-200 overflow-x-hidden">
         <PaginationContent>
           <PaginationItem className="cursor-pointer">
             <PaginationPrevious
@@ -65,24 +71,34 @@ export default function App() {
               }}
             />
           </PaginationItem>
-          {Array.from(Array(maxPaginationItems), (_, i) => (
-            <PaginationItem
-              key={i}
-              className="cursor-pointer"
-              onClick={() => setPage(i)}
-            >
-              <PaginationLink
-                isActive={
-                  i === page ||
-                  (i === maxPaginationItems - 1 && page >= maxPaginationItems)
-                }
-              >
-                {i === maxPaginationItems - 1 && page >= maxPaginationItems
-                  ? page + 1
-                  : i + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
+
+          {Array.from(
+            Array(Math.min(maxPaginationItems, itemsBookLimit)),
+            (_, i) => {
+              const isLastItem = i === maxPaginationItems - 1;
+              const isCurrentPage = i === page;
+              return (
+                <PaginationItem
+                  key={i + 1}
+                  className="cursor-pointer"
+                  onClick={() => setPage(i)}
+                >
+                  <PaginationLink
+                    isActive={
+                      isCurrentPage ||
+                      (i === maxPaginationItems - 1 &&
+                        page >= maxPaginationItems)
+                    }
+                  >
+                    {isLastItem && page >= maxPaginationItems
+                      ? page + 1
+                      : i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            }
+          )}
+
           <PaginationItem className="cursor-pointer">
             <PaginationNext
               onClick={() => {
