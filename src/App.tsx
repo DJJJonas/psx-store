@@ -86,8 +86,7 @@ export default function App() {
                   <PaginationLink
                     isActive={
                       isCurrentPage ||
-                      (i === maxPaginationItems - 1 &&
-                        page >= maxPaginationItems)
+                      (isCurrentPage && page >= maxPaginationItems)
                     }
                   >
                     {isLastItem && page >= maxPaginationItems
