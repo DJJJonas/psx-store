@@ -7,18 +7,6 @@ import {
 } from "@/components/ui/card";
 import ItemInfo from "@/interfaces/ItemInfo";
 
-function calculatePriceAndDiscount(serial: string) {
-  const numbers = serial.split("-")[1];
-  // the first two numbers are the discount in %
-  let discount = parseInt(numbers.substring(0, 2)) / 100;
-  // - but if the discount is zero, then set it to 90% discount
-  if (discount === 0) discount = 0.1;
-  // the last three numbers are the price
-  const price = parseInt(numbers.substring(2));
-
-  return [price, discount];
-}
-
 type ItemProps = {
   readonly item: ItemInfo;
   readonly onFavorite: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
@@ -39,8 +27,6 @@ export default function Item({
   for (let i = 0; i < defaultRating / 2; i++) {
     fullStars.push(<i key={"star" + i} className="fa fa-star"></i>);
   }
-
-  const [price, discount] = calculatePriceAndDiscount(item.serial);
 
   return (
     <Card
@@ -75,9 +61,11 @@ export default function Item({
         <p className="text-stale-500">{fullStars}</p>
         {/* Price info */}
         <div className="flex flex-col md:flex-row justify-end items-end w-full">
-          <span className="text-sm text-slate-400 line-through">R${price}</span>
+          <span className="text-sm text-slate-400 line-through">
+            R${item.price}
+          </span>
           <p className="self-end text-green-600 text-2xl font-semibold">
-            R${(price * discount).toFixed(2)}
+            R${(item.price * item.discount).toFixed(2)}
           </p>
         </div>
       </CardFooter>

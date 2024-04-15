@@ -13,13 +13,28 @@ import {
 import allItems from "./assets/psx_games.json";
 import Navbar from "./components/ui/navbar";
 
+function calcPriceAndDiscount(serial: string) {
+  const numbers = serial.split("-")[1];
+  // the first two numbers are the discount in %
+  let discount = parseInt(numbers.substring(0, 2)) / 100;
+  // - but if the discount is zero, then set it to 90% discount
+  if (discount === 0) discount = 0.1;
+  // the last three numbers are the price
+  const price = parseInt(numbers.substring(2));
+
+  return [price, discount];
+}
+
 export default function App() {
   const [items, setItems] = useState<ItemInfo[]>([]);
+  const [shopCart, setShopCart] = useState<ItemInfo[]>([]);
+
   const [page, setPage] = useState(0);
+  const [queryName, setQueryName] = useState("");
+
   const maxPaginationItems = 5;
   const itemsPageLimit = 9;
-  const itemsBookLimit = Math.ceil(allItems.length / itemsPageLimit);
-  const [queryName, setQueryName] = useState("");
+  const paginationItemLimit = Math.ceil(allItems.length / itemsPageLimit);
 
   useEffect(() => {
     const queryedItems = allItems.filter(({ name }) => {
@@ -30,13 +45,19 @@ export default function App() {
       const item = queryedItems[i];
 
       if (!item) break;
-      temp.push(item);
+      //@ts-expect-error copy item info then set price and discount
+      const itemInfo: ItemInfo = { ...item };
+      [itemInfo.price, itemInfo.discount] = calcPriceAndDiscount(item.serial);
+      temp.push(itemInfo);
     }
     setItems(temp);
     // Clean Up
     return () => setItems([]);
   }, [page, queryName]);
 
+  useEffect(() => {
+    console.log(shopCart);
+  }, [shopCart]);
   return (
     <>
       <Navbar
@@ -52,7 +73,9 @@ export default function App() {
             <Item
               key={item.serial + i}
               item={item}
-              onCartAdd={console.log}
+              onCartAdd={() => {
+                setShopCart([...shopCart, item]);
+              }}
               onFavorite={console.log}
               className={i + 1 === itemsPageLimit ? "max-[768px]:hidden" : ""}
             />
@@ -73,7 +96,7 @@ export default function App() {
           </PaginationItem>
 
           {Array.from(
-            Array(Math.min(maxPaginationItems, itemsBookLimit)),
+            Array(Math.min(maxPaginationItems, paginationItemLimit)),
             (_, i) => {
               const isLastItem = i === maxPaginationItems - 1;
               const isCurrentPage = i === page;
@@ -101,7 +124,7 @@ export default function App() {
           <PaginationItem className="cursor-pointer">
             <PaginationNext
               onClick={() => {
-                if (page < itemsBookLimit) {
+                if (page < paginationItemLimit) {
                   setPage(page + 1);
                 }
               }}
