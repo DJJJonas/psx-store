@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
 import "./App.css";
-import Item from "./components/ui/item";
-import ItemInfo from "./interfaces/ItemInfo";
+
+import { useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -10,20 +9,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import allItems from "./assets/psx_games.json";
+
+import Item from "./components/ui/item";
+import ItemInfo from "./interfaces/ItemInfo";
 import Navbar from "./components/ui/navbar";
 
-function calcPriceAndDiscount(serial: string) {
-  const numbers = serial.split("-")[1];
-  // the first two numbers are the discount in %
-  let discount = parseInt(numbers.substring(0, 2)) / 100;
-  // - but if the discount is zero, then set it to 90% discount
-  if (discount === 0) discount = 0.1;
-  // the last three numbers are the price
-  const price = parseInt(numbers.substring(2));
-
-  return [price, discount];
-}
+import allItems from "./assets/psx_games.json";
 
 export default function App() {
   const [items, setItems] = useState<ItemInfo[]>([]);
@@ -55,13 +46,11 @@ export default function App() {
     return () => setItems([]);
   }, [page, queryName]);
 
-  useEffect(() => {
-    console.log(shopCart);
-  }, [shopCart]);
   return (
     <>
       <Navbar
         cart={shopCart}
+        OnCartClick={() => console.log("TODO")}
         OnInput={({ target }) => {
           setPage(0);
           setQueryName(target.value);
@@ -137,4 +126,16 @@ export default function App() {
       <footer></footer>
     </>
   );
+}
+
+function calcPriceAndDiscount(serial: string) {
+  const numbers = serial.split("-")[1];
+  // the first two numbers are the discount in %
+  let discount = parseInt(numbers.substring(0, 2)) / 100;
+  // - but if the discount is zero, then set it to 90% discount
+  if (discount === 0) discount = 0.1;
+  // the last three numbers are the price
+  const price = parseInt(numbers.substring(2));
+
+  return [price, discount];
 }
