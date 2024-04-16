@@ -61,6 +61,7 @@ export default function App() {
   return (
     <>
       <Navbar
+        cart={shopCart}
         OnInput={({ target }) => {
           setPage(0);
           setQueryName(target.value);
