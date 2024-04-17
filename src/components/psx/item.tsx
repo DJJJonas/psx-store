@@ -62,10 +62,10 @@ export default function PsxGridItem({
         {/* Price info */}
         <div className="flex flex-col md:flex-row justify-end items-end w-full">
           <span className="text-sm text-slate-400 line-through">
-            R${item.price}
+            ${item.price}
           </span>
           <p className="self-end text-green-600 text-2xl font-semibold">
-            R${(item.price * item.discount).toFixed(2)}
+            ${(item.price * item.discount).toFixed(2)}
           </p>
         </div>
       </CardFooter>
