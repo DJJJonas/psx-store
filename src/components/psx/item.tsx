@@ -4,7 +4,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/shadcn/card";
 import ItemInfo from "@/interfaces/ItemInfo";
 
 type ItemProps = {
@@ -13,7 +13,7 @@ type ItemProps = {
   readonly onCartAdd: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   readonly className?: string;
 };
-export default function Item({
+export default function PsxGridItem({
   item,
   onCartAdd,
   onFavorite,

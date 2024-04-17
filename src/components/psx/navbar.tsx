@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/shadcn/input";
 import logoImg from "@/assets/psx_store.png";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/shadcn/badge";
 import ItemInfo from "@/interfaces/ItemInfo";
 
 type OnInputType = (e: React.ChangeEvent<HTMLInputElement>) => void;

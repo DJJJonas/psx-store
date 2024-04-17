@@ -1,50 +1,51 @@
 import "./App.css";
 
 import { useEffect, useState } from "react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import Pagination from "@/components/psx/pagination";
 
-import Item from "./components/ui/item";
+import PsxGridItem from "./components/psx/item";
 import ItemInfo from "./interfaces/ItemInfo";
-import Navbar from "./components/ui/navbar";
+import Navbar from "./components/psx/navbar";
 
-import allItems from "./assets/psx_games.json";
+import games from "./assets/psx_games.json";
 
 export default function App() {
   const [items, setItems] = useState<ItemInfo[]>([]);
   const [shopCart, setShopCart] = useState<ItemInfo[]>([]);
+  const [nameInput, setNameInput] = useState("");
 
+  // Pagination variables
+  const maxItemsPerPage = 9;
   const [page, setPage] = useState(0);
-  const [queryName, setQueryName] = useState("");
+  const maxPaginationLinks = 5;
+  const paginationLinksLimit = Math.ceil(games.length / maxItemsPerPage);
 
-  const maxPaginationItems = 5;
-  const itemsPageLimit = 9;
-  const paginationItemLimit = Math.ceil(allItems.length / itemsPageLimit);
-
+  // Update page items
   useEffect(() => {
-    const queryedItems = allItems.filter(({ name }) => {
-      return name.toLowerCase().includes(queryName.toLowerCase());
+    const query = games.filter(({ name }) => {
+      const [n, input] = [name, nameInput].map((s) => s.toLowerCase());
+      return n.includes(input);
     });
-    const temp: ItemInfo[] = [];
-    for (let i = page * itemsPageLimit; i < itemsPageLimit * (page + 1); i++) {
-      const item = queryedItems[i];
+
+    const pageStart = page * maxItemsPerPage;
+    const pageEnd = (page + 1) * maxItemsPerPage;
+    const newItems: ItemInfo[] = [];
+
+    for (let i = pageStart; i < pageEnd; i++) {
+      const item = query[i];
 
       if (!item) break;
-      //@ts-expect-error copy item info then set price and discount
+      //@ts-expect-error copy serial and name from item
       const itemInfo: ItemInfo = { ...item };
       [itemInfo.price, itemInfo.discount] = calcPriceAndDiscount(item.serial);
-      temp.push(itemInfo);
+      newItems.push(itemInfo);
     }
-    setItems(temp);
+
+    setItems(newItems);
+
     // Clean Up
     return () => setItems([]);
-  }, [page, queryName]);
+  }, [page, nameInput]);
 
   return (
     <>
@@ -53,75 +54,32 @@ export default function App() {
         OnCartClick={() => console.log("TODO")}
         OnInput={({ target }) => {
           setPage(0);
-          setQueryName(target.value);
+          setNameInput(target.value);
         }}
       />
 
       <main className="bg-slate-200 w-full min-h-screen">
         <div className="grid md:grid-cols-3 grid-cols-2 gap-2 max-w-screen-md md:mx-auto mx-2 py-2">
           {items.map((item, i) => (
-            <Item
+            <PsxGridItem
               key={item.serial + i}
               item={item}
               onCartAdd={() => {
                 setShopCart([...shopCart, item]);
               }}
               onFavorite={console.log}
-              className={i + 1 === itemsPageLimit ? "max-[768px]:hidden" : ""}
+              className={i + 1 === maxItemsPerPage ? "max-[768px]:hidden" : ""}
             />
           ))}
         </div>
       </main>
 
-      <Pagination className="py-2 bg-slate-200 overflow-x-hidden">
-        <PaginationContent>
-          <PaginationItem className="cursor-pointer">
-            <PaginationPrevious
-              onClick={() => {
-                if (page > 0) {
-                  setPage(page - 1);
-                }
-              }}
-            />
-          </PaginationItem>
-
-          {Array.from(
-            Array(Math.min(maxPaginationItems, paginationItemLimit)),
-            (_, i) => {
-              const isLastItem = i === maxPaginationItems - 1;
-              const isCurrentPage = i === page;
-              return (
-                <PaginationItem
-                  key={i + 1}
-                  className="cursor-pointer"
-                  onClick={() => setPage(i)}
-                >
-                  <PaginationLink
-                    isActive={
-                      isCurrentPage ||
-                      (isCurrentPage && page >= maxPaginationItems)
-                    }
-                  >
-                    {isLastItem && page >= maxPaginationItems
-                      ? page + 1
-                      : i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              );
-            }
-          )}
-
-          <PaginationItem className="cursor-pointer">
-            <PaginationNext
-              onClick={() => {
-                if (page < paginationItemLimit) {
-                  setPage(page + 1);
-                }
-              }}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <Pagination
+        page={page}
+        setPage={setPage}
+        maxPaginationLinks={maxPaginationLinks}
+        paginationLinksLimit={paginationLinksLimit}
+      />
 
       <footer></footer>
     </>
