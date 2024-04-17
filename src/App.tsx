@@ -1,5 +1,3 @@
-import "./App.css";
-
 import { useEffect, useState } from "react";
 import Pagination from "@/components/psx/pagination";
 
@@ -8,11 +6,13 @@ import ItemInfo from "./interfaces/ItemInfo";
 import Navbar from "./components/psx/navbar";
 
 import games from "./assets/psx_games.json";
+import PurchaseDialog from "./components/psx/purchaseDialog";
 
 export default function App() {
   const [items, setItems] = useState<ItemInfo[]>([]);
   const [shopCart, setShopCart] = useState<ItemInfo[]>([]);
   const [nameInput, setNameInput] = useState("");
+  const [isPurchaseDialogOpen, setIsPurchaseDialogOpen] = useState(false);
 
   // Pagination variables
   const maxItemsPerPage = 9;
@@ -35,9 +35,7 @@ export default function App() {
       const item = query[i];
 
       if (!item) break;
-      //@ts-expect-error copy serial and name from item
-      const itemInfo: ItemInfo = { ...item };
-      [itemInfo.price, itemInfo.discount] = calcPriceAndDiscount(item.serial);
+      const itemInfo: ItemInfo = createItem(item);
       newItems.push(itemInfo);
     }
 
@@ -49,9 +47,15 @@ export default function App() {
 
   return (
     <>
+      <PurchaseDialog
+        items={shopCart}
+        open={isPurchaseDialogOpen}
+        setOpen={setIsPurchaseDialogOpen}
+      />
+
       <Navbar
         cart={shopCart}
-        OnCartClick={() => console.log("TODO")}
+        OnCartClick={() => setIsPurchaseDialogOpen(!isPurchaseDialogOpen)}
         OnInput={({ target }) => {
           setPage(0);
           setNameInput(target.value);
@@ -84,6 +88,13 @@ export default function App() {
       <footer></footer>
     </>
   );
+}
+
+function createItem(item: { name: string; serial: string }) {
+  //@ts-expect-error creating item
+  const itemInfo: ItemInfo = { ...item };
+  [itemInfo.price, itemInfo.discount] = calcPriceAndDiscount(item.serial);
+  return itemInfo;
 }
 
 function calcPriceAndDiscount(serial: string) {
