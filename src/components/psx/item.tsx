@@ -40,13 +40,13 @@ export default function PsxGridItem({
         <div className="[ absolute top-0 right-2 ] [ flex flex-col ] [ md:text-base text-2xl ]">
           <button
             onClick={onFavorite}
-            className=" text-gray-400 transition cursor-pointer hover:scale-110"
+            className=" text-gray-400 transition cursor-pointer hover:scale-110 active:text-red-600"
           >
             <i className="fa fa-heart"></i>
           </button>
           <button
             onClick={onCartAdd}
-            className="text-gray-400 transition cursor-pointer hover:scale-110"
+            className="text-gray-400 transition cursor-pointer hover:scale-110 active:text-blue-600"
           >
             <i className="fa fa-shopping-cart"></i>
           </button>
