@@ -14,6 +14,7 @@ export default function PurchaseDialog(props: {
   readonly items: ItemInfo[];
   readonly open: boolean;
   readonly setOpen: (open: boolean) => void;
+  readonly onClearCart: () => void;
 }) {
   const [total, setTotal] = useState(0);
 
@@ -52,6 +53,14 @@ export default function PurchaseDialog(props: {
         </div>
 
         <DialogFooter className="gap-2">
+          <Button
+            disabled={props.items.length === 0}
+            type="button"
+            variant={"secondary"}
+            onClick={props.onClearCart}
+          >
+            Clear cart
+          </Button>
           <Button
             disabled={props.items.length === 0}
             type="button"

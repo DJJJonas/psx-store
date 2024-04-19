@@ -51,6 +51,7 @@ export default function App() {
         items={shopCart}
         open={isPurchaseDialogOpen}
         setOpen={setIsPurchaseDialogOpen}
+        onClearCart={() => setShopCart([])}
       />
 
       <Navbar
