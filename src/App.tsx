@@ -72,8 +72,8 @@ export default function App() {
         }}
       />
 
-      <main className="bg-slate-200 w-full min-h-screen">
-        <div className="grid md:grid-cols-3 grid-cols-2 gap-2 max-w-screen-md md:mx-auto mx-2 py-2">
+      <main className="w-full min-h-screen bg-slate-200">
+        <div className="grid max-w-screen-md grid-cols-2 gap-2 py-2 mx-2 md:grid-cols-3 md:mx-auto">
           {items.map((item, i) => (
             <PsxGridItem
               key={item.serial + i}

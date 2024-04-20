@@ -41,7 +41,7 @@ export default function PurchaseDialog(props: {
                 className="flex justify-between"
               >
                 <span className="line-clamp-1">{item.name}</span>
-                <span className="text-green-600 font-semibold">
+                <span className="font-semibold text-green-600">
                   ${(item.price * item.discount).toFixed(2)}
                 </span>
               </DialogDescription>

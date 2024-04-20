@@ -19,7 +19,7 @@ export default function Pagination({
   readonly paginationLinksLimit: number;
 }) {
   return (
-    <PaginationRoot className="py-2 bg-slate-200 overflow-x-hidden">
+    <PaginationRoot className="py-2 overflow-x-hidden bg-slate-200">
       <PaginationContent>
         <PaginationItem className="cursor-pointer">
           <PaginationPrevious

@@ -18,7 +18,7 @@ export default function Navbar({
   readonly money: number;
 }) {
   return (
-    <header className="bg-slate-800 h-16 px-8 flex justify-between items-center">
+    <header className="flex items-center justify-between h-16 px-8 bg-slate-800">
       <img src={logoImg} srcSet="" alt="psx store" className="h-full" />
       <Input
         placeholder="Search"
@@ -27,7 +27,7 @@ export default function Navbar({
       />
       <div className="flex gap-2">
         <button
-          className="relative rounded-full aspect-square w-8 bg-slate-600 hover:bg-slate-500 active:bg-slate-400 text-slate-200 text-1"
+          className="relative w-8 rounded-full aspect-square bg-slate-600 hover:bg-slate-500 active:bg-slate-400 text-slate-200 text-1"
           onClick={OnCartClick}
         >
           <i className="fa fa-shopping-cart"></i>
@@ -40,7 +40,7 @@ export default function Navbar({
           )}
         </button>
 
-        <button className="relative rounded-full bg-slate-600 hover:bg-slate-500 active:bg-slate-400 text-slate-200 text-1 text-green-200 font-semibold py-1 px-2">
+        <button className="relative px-2 py-1 font-semibold text-green-200 rounded-full bg-slate-600 hover:bg-slate-500 active:bg-slate-400 text-slate-200 text-1">
           <span>{money}</span>
         </button>
       </div>
