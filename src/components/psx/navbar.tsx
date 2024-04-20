@@ -40,8 +40,10 @@ export default function Navbar({
           )}
         </button>
 
-        <button className="relative px-2 py-1 font-semibold text-green-200 rounded-full bg-slate-600 hover:bg-slate-500 active:bg-slate-400 text-slate-200 text-1">
-          <span>{money}</span>
+        <button className="relative px-2 py-1 font-semibold rounded-full bg-slate-600 hover:bg-slate-500 active:bg-slate-400text-1">
+          <span className={money < 0 ? "text-red-400" : "text-green-200"}>
+            ${money}
+          </span>
         </button>
       </div>
     </header>
