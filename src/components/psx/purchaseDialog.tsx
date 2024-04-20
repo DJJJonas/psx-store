@@ -15,6 +15,7 @@ export default function PurchaseDialog(props: {
   readonly open: boolean;
   readonly setOpen: (open: boolean) => void;
   readonly onClearCart: () => void;
+  readonly onPurchase: (totalAmount: number) => void;
 }) {
   const [total, setTotal] = useState(0);
 
@@ -65,6 +66,9 @@ export default function PurchaseDialog(props: {
             disabled={props.items.length === 0}
             type="button"
             variant={"default"}
+            onClick={() => {
+              props.onPurchase(total);
+            }}
           >
             Complete purchase
           </Button>

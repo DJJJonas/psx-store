@@ -13,6 +13,7 @@ export default function App() {
   const [shopCart, setShopCart] = useState<ItemInfo[]>([]);
   const [nameInput, setNameInput] = useState("");
   const [isPurchaseDialogOpen, setIsPurchaseDialogOpen] = useState(false);
+  const [money, setMoney] = useState(90000);
 
   // Pagination variables
   const maxItemsPerPage = 9;
@@ -52,10 +53,18 @@ export default function App() {
         open={isPurchaseDialogOpen}
         setOpen={setIsPurchaseDialogOpen}
         onClearCart={() => setShopCart([])}
+        onPurchase={(totalAmount) => {
+          const totalAfterPurchase = money - totalAmount;
+          setMoney(totalAfterPurchase);
+          setShopCart([]);
+
+          setIsPurchaseDialogOpen(false);
+        }}
       />
 
       <Navbar
         cart={shopCart}
+        money={money}
         OnCartClick={() => setIsPurchaseDialogOpen(!isPurchaseDialogOpen)}
         OnInput={({ target }) => {
           setPage(0);
